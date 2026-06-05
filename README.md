@@ -52,37 +52,23 @@ Below are placeholders where you can add your custom screenshots of the applicat
 
 ### 1. Dashboard Overview
 
-<!-- Place your dashboard overview screenshot at: ./screenshots/dashboard_overview.png -->
-
-![Dashboard Overview](./screenshots/dashboard_overview.png)
+<img src="./screenshots/dashboard_overview.png" width="700" alt="Alt Text">  
 _Figure 1: Dashboard overview displaying responsive Total Income, Total Expenses, and Net Balance summary cards alongside the Recharts category expense distribution bar chart._
 
 ### 2. Adding Transaction Form
 
-<!-- Place your transaction form screenshot at: ./screenshots/transaction_form.png -->
+<img src="./screenshots/adding_transaction_form.png" width="300" alt="Alt Text"><img src="./screenshots/editing_transaction_form.png" width="300" alt="Alt Text">  
+_Figure 2: Transaction adding & updating form, showcasing the minimalist responsive category dropdown, type toggle badges, and the secondary optional note field._
 
-![Adding Transaction Form](./screenshots/adding_transaction_form.png)
-_Figure 2: Transaction addition form, showcasing the minimalist responsive category dropdown, type toggle badges, and the secondary optional note field._
+### 3. Transaction Ledger with Search and Analytics Chart
 
-### 3. Editing Transaction Form
+<img src="./screenshots/transaction_list.png" width="350" alt="Alt Text"><img src="./screenshots/analytics_chart.png" width="350" alt="Alt Text">  
+_Figure 3: Transaction ledger with search functionality alongside category-wise expense analytics visualization._
 
-![Editing Transaction Form](./screenshots/editing_transaction_form.png)
-_Figure 3: Transaction editing form, showcasing the minimalist responsive category dropdown, type toggle badges, and the secondary optional note field._
+### 4. Exported CSV
 
-### 4. Transaction Ledger with Search and Emojis
-
-![Transaction List](./screenshots/transaction_list.png)
-_Figure 4: Transaction list displaying dynamic category emojis, customized transaction note cards, date highlights, and action controls with confirmation dialog triggers._
-
-### 5. Analytics Chart
-
-![Analytics Chart](./screenshots/analytics_chart.png)
-_Figure 5: Analytics chart displaying category-wise expense distribution using Recharts bar chart for the selected month._
-
-### 6. Exported CSV
-
-![Exported CSV](./screenshots/exported_csv.png)
-_Figure 6: Exported CSV file showing the list of transactions for the selected month._
+<img src="./screenshots/exported_csv.png" width="500" alt="Alt Text">  
+_Figure 4: Exported CSV file showing the list of transactions for the selected month._
 
 ---
 
@@ -150,7 +136,7 @@ Start the local Vite development server:
 npm run dev
 ```
 
-(Or `pnpm run dev`)
+(Or `pnpm run dev`)  
 Navigate to `http://localhost:5173` in your browser. The SQLite WebAssembly engine will initialize and serve the app locally.
 
 ### 3. Build for Production
