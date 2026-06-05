@@ -156,8 +156,8 @@ export default function App() {
       />
 
       {/* Header bar */}
-      <header className="sticky top-0 bg-card/85 backdrop-blur-md border-b border-border z-40 px-6 py-4 shadow-sm select-none">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <header className="sticky top-0 bg-card/85 backdrop-blur-md border-b border-border z-40 px-4 sm:px-6 py-3 sm:py-4 shadow-sm select-none">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           
           {/* Logo Title */}
           <div className="flex items-center gap-3">
@@ -175,7 +175,7 @@ export default function App() {
           </div>
 
           {/* Month picker & Actions */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-1.5 sm:gap-3 w-full sm:w-auto justify-center sm:justify-end">
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             <MonthPicker selectedMonth={selectedMonth} onChange={setSelectedMonth} />
             <ExportButton selectedMonth={selectedMonth} />

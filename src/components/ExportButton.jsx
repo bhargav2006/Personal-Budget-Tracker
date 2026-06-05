@@ -36,10 +36,10 @@ export default function ExportButton({ selectedMonth }) {
   return (
     <button
       onClick={handleExport}
-      className="flex items-center justify-center gap-2 bg-surface hover:bg-border/40 text-textPrimary border border-border px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm hover:border-textSecondary/30 transition-all duration-200"
+      className="flex items-center justify-center gap-1.5 sm:gap-2 bg-surface hover:bg-border/40 text-textPrimary border border-border px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm hover:border-textSecondary/30 transition-all duration-200 shrink-0"
       title="Export month data to CSV"
     >
-      <Download className="w-4 h-4 text-textSecondary" />
+      <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-textSecondary shrink-0" />
       <span>Export CSV</span>
     </button>
   );

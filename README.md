@@ -52,22 +52,22 @@ Below are placeholders where you can add your custom screenshots of the applicat
 
 ### 1. Dashboard Overview
 
-<img src="./screenshots/dashboard_overview.png" width="700" alt="Alt Text">  
+<img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/dashboard_overview.png?raw=true" width="500" alt="dashboard_overview"><img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/dashboard_overview_mobile.jpeg" width="300" alt="dashboard_overview_mobile">  
 _Figure 1: Dashboard overview displaying responsive Total Income, Total Expenses, and Net Balance summary cards alongside the Recharts category expense distribution bar chart._
 
 ### 2. Adding Transaction Form
 
-<img src="./screenshots/adding_transaction_form.png" width="300" alt="Alt Text"><img src="./screenshots/editing_transaction_form.png" width="300" alt="Alt Text">  
+<img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/adding_transaction_form.png?raw=true" width="300" alt="adding_transaction_form"><img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/editing_transaction_form.png?raw=true" width="300" alt="editing_transaction_form">  
 _Figure 2: Transaction adding & updating form, showcasing the minimalist responsive category dropdown, type toggle badges, and the secondary optional note field._
 
 ### 3. Transaction Ledger with Search and Analytics Chart
 
-<img src="./screenshots/transaction_list.png" width="350" alt="Alt Text"><img src="./screenshots/analytics_chart.png" width="350" alt="Alt Text">  
+<img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/transaction_list.png?raw=true" width="350" alt="transaction_list"><img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/analytics_chart.png?raw=true" width="350" alt="analytics_chart">  
 _Figure 3: Transaction ledger with search functionality alongside category-wise expense analytics visualization._
 
 ### 4. Exported CSV
 
-<img src="./screenshots/exported_csv.png" width="500" alt="Alt Text">  
+<img src="https://github.com/bhargav2006/azentrix-fullstack-task1/blob/main/screenshots/exported_csv.png?raw=true" width="500" alt="exported_csv">  
 _Figure 4: Exported CSV file showing the list of transactions for the selected month._
 
 ---
