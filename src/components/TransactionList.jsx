@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Pencil, Trash2, AlertCircle, ArrowUpRight, ArrowDownRight, Search } from 'lucide-react';
+import { Pencil, Trash2, AlertCircle, ArrowUpRight, ArrowDownRight, Search, SlidersHorizontal } from 'lucide-react';
 
 export default function TransactionList({ transactions, onEdit, onDelete, editingId }) {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all'); // 'all' | 'expense' | 'income'
+  const [sortBy, setSortBy] = useState('date-desc'); // 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc'
 
   // Handle actual deletion approval
   const handleDeleteConfirm = () => {
@@ -14,10 +16,34 @@ export default function TransactionList({ transactions, onEdit, onDelete, editin
     }
   };
 
-  // Filter transactions based on category search
-  const filteredTransactions = transactions.filter(t =>
-    t.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter and sort transactions
+  const filteredAndSortedTransactions = useMemo(() => {
+    let result = transactions.filter((t) => {
+      if (filterType !== 'all' && t.type !== filterType) {
+        return false;
+      }
+      if (searchTerm.trim()) {
+        const term = searchTerm.toLowerCase();
+        const matchesCategory = t.category.toLowerCase().includes(term);
+        const matchesDesc = (t.description || '').toLowerCase().includes(term);
+        return matchesCategory || matchesDesc;
+      }
+      return true;
+    });
+
+    result.sort((a, b) => {
+      if (sortBy === 'date-desc') return new Date(b.date) - new Date(a.date) || b.id - a.id;
+      if (sortBy === 'date-asc') return new Date(a.date) - new Date(b.date) || a.id - b.id;
+      if (sortBy === 'amount-desc') return b.amount - a.amount;
+      if (sortBy === 'amount-asc') return a.amount - b.amount;
+      return 0;
+    });
+
+    return result;
+  }, [transactions, filterType, searchTerm, sortBy]);
+
+  const incomeCount = transactions.filter(t => t.type === 'income').length;
+  const expenseCount = transactions.filter(t => t.type === 'expense').length;
 
   // Dynamic category emoji mapper
   const getCategoryEmoji = (cat) => {
@@ -38,148 +64,198 @@ export default function TransactionList({ transactions, onEdit, onDelete, editin
       case 'education': return '📚';
       case 'other income': return '💰';
       case 'other expense': return '📦';
-      default: return '💰';
+      default: return '🏷️';
     }
   };
 
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-sm p-6 flex flex-col h-[536px] transition-all duration-300">
+    <div className="bg-surface border border-border rounded-xl p-3 sm:p-4 shadow-card flex flex-col">
       
-      {/* Header with Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-border/60">
-        <h3 className="text-lg font-bold text-textPrimary flex items-center gap-2 select-none">
-          <span className="flex h-2.5 w-2.5 rounded-full bg-accent" />
-          Transactions
-        </h3>
-        
-        {/* Search Input */}
-        <div className="relative flex-1 sm:max-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary/60 w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search category..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-surface border border-border rounded-xl pl-9 pr-4 py-1.5 text-xs text-textPrimary placeholder-textSecondary/50 font-medium focus:outline-none focus:border-accent transition-all"
-          />
+      {/* Header and Filter Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5 pb-2 border-b border-border">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full border border-primary/60 bg-primary/20" />
+          <h3 className="text-xs sm:text-sm font-bold text-textPrimary tracking-tight">
+            Transaction Ledger
+          </h3>
+          <span className="text-[10px] text-textSecondary font-medium ml-1">
+            {transactions.length} entries · latest activity
+          </span>
+        </div>
+
+        {/* Filter Pills: All | Outflow | Inflow */}
+        <div className="flex items-center gap-1 p-0.5 bg-surface-sunken rounded-lg border border-border text-[11px] font-semibold self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setFilterType('all')}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              filterType === 'all'
+                ? 'bg-surface text-textPrimary shadow-sm border border-border font-bold'
+                : 'text-textSecondary hover:text-textPrimary'
+            }`}
+          >
+            All ({transactions.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('expense')}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              filterType === 'expense'
+                ? 'bg-surface text-textPrimary shadow-sm border border-border font-bold'
+                : 'text-textSecondary hover:text-textPrimary'
+            }`}
+          >
+            Outflow ({expenseCount})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('income')}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              filterType === 'income'
+                ? 'bg-surface text-textPrimary shadow-sm border border-border font-bold'
+                : 'text-textSecondary hover:text-textPrimary'
+            }`}
+          >
+            Inflow ({incomeCount})
+          </button>
         </div>
       </div>
 
-      {/* Transaction List Container */}
-      <div className="flex-1 overflow-y-auto pr-1 space-y-3">
-        {filteredTransactions.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 select-none animate-fade-in">
-            <div className="bg-surface rounded-full p-4 mb-3 border border-border">
-              <AlertCircle className="w-6 h-6 text-textSecondary/50" />
-            </div>
-            <p className="text-sm font-semibold text-textPrimary">No transactions found</p>
-            <p className="text-xs text-textSecondary mt-1">
-              {searchTerm ? 'Try adjusting your search filter' : 'Add your first income or expense above'}
+      {/* Compact Search & Sort Toolbar */}
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 mb-2.5">
+        {/* Search */}
+        <div className="sm:col-span-8 relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-textSubtle w-3.5 h-3.5 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search category or note..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-surface-sunken border border-border rounded-lg pl-7 pr-3 py-1 text-xs text-textPrimary placeholder:text-textSubtle font-medium focus:outline-none focus:border-primary transition-all"
+          />
+        </div>
+
+        {/* Sort Select */}
+        <div className="sm:col-span-4 relative">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full bg-surface-sunken border border-border rounded-lg px-2.5 py-1 text-xs text-textPrimary font-semibold focus:outline-none focus:border-primary cursor-pointer appearance-none pr-7"
+          >
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="amount-desc">Highest Amount</option>
+            <option value="amount-asc">Lowest Amount</option>
+          </select>
+          <SlidersHorizontal className="w-3 h-3 text-textSubtle absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
+      </div>
+
+      {/* Two-Column Grid of Transaction Cards (Matching Mockup) */}
+      <div className="overflow-y-auto pr-0.5 max-h-[220px] 2xl:max-h-[280px]">
+        {filteredAndSortedTransactions.length === 0 ? (
+          <div className="h-28 flex flex-col items-center justify-center text-center p-4 bg-surface-sunken/40 rounded-lg border border-dashed border-border select-none">
+            <p className="text-xs font-semibold text-textPrimary">No transactions found</p>
+            <p className="text-[10px] text-textSecondary mt-0.5">
+              {searchTerm || filterType !== 'all' ? 'Try adjusting search or filter' : 'Record an entry to populate the ledger'}
             </p>
           </div>
         ) : (
-          filteredTransactions.map((t) => {
-            const formattedDate = format(parseISO(t.date), 'dd MMM yyyy');
-            const isEditing = editingId === t.id;
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {filteredAndSortedTransactions.map((t) => {
+              const formattedDate = format(parseISO(t.date), 'dd MMM yyyy');
+              const isEditing = editingId === t.id;
+              const isIncome = t.type === 'income';
 
-            return (
-              <div
-                key={t.id}
-                className={`group flex items-start justify-between p-3.5 rounded-xl border transition-all duration-200 animate-fade-in ${
-                  isEditing
-                    ? 'border-accent/40 bg-accent/[0.02] shadow-sm'
-                    : 'border-border/60 hover:border-border hover:bg-surface/40 hover:shadow-sm'
-                }`}
-              >
-                {/* Left side details */}
-                <div className="flex items-start gap-3">
-                  <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center mt-0.5 shrink-0 ${
-                      t.type === 'income'
-                        ? 'bg-income/10 text-income'
-                        : 'bg-expense/10 text-expense'
-                    }`}
-                  >
-                    {t.type === 'income' ? (
-                      <ArrowUpRight className="w-4 h-4" />
-                    ) : (
-                      <ArrowDownRight className="w-4 h-4" />
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-1.5 truncate max-w-[120px] sm:max-w-[180px]">
-                      <span className="text-base leading-none select-none">{getCategoryEmoji(t.category)}</span>
-                      <span>{t.category}</span>
-                    </h4>
-                    {t.description && (
-                      <p className="text-xs text-textSecondary font-normal mt-0.5 leading-tight select-all">
-                        {t.description}
+              return (
+                <div
+                  key={t.id}
+                  className={`group flex items-center justify-between p-2 rounded-lg border transition-all duration-150 ${
+                    isEditing
+                      ? 'border-primary bg-primary-container/20 shadow-sm'
+                      : 'border-border bg-surface-sunken/30 hover:border-control-border hover:bg-surface-sunken/70'
+                  }`}
+                >
+                  {/* Left side details */}
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm select-none shrink-0">{getCategoryEmoji(t.category)}</span>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-semibold text-textPrimary truncate leading-tight">
+                        {t.category}
+                      </h4>
+                      {t.description && (
+                        <p className="text-[10px] text-textSecondary truncate max-w-[130px] sm:max-w-[160px] leading-tight">
+                          {t.description}
+                        </p>
+                      )}
+                      <p className="text-[9px] font-medium text-textSubtle leading-tight mt-0.5">
+                        {formattedDate}
                       </p>
-                    )}
-                    <p className="text-[10px] font-medium text-textSecondary/60 mt-1 select-none">
-                      {formattedDate}
-                    </p>
+                    </div>
+                  </div>
+
+                  {/* Right side amount and actions */}
+                  <div className="flex items-center gap-2 shrink-0 pl-2">
+                    <span className="text-xs font-bold font-mono tracking-tight text-textPrimary">
+                      <span className={isIncome ? 'text-success font-medium mr-0.5' : 'text-error font-medium mr-0.5'}>
+                        {isIncome ? '+' : '-'}
+                      </span>
+                      ₹{t.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+
+                    {/* Quick Edit/Delete on Hover */}
+                    <div className="flex items-center gap-0.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => onEdit(t)}
+                        title="Edit Entry"
+                        aria-label="Edit Entry"
+                        className="p-1 rounded text-textSecondary hover:text-textPrimary hover:bg-surface transition-colors"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirmId(t.id)}
+                        title="Delete Entry"
+                        aria-label="Delete Entry"
+                        className="p-1 rounded text-textSecondary hover:text-error hover:bg-error-bg transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                {/* Right side actions and amount */}
-                <div className="flex items-center gap-4">
-                  <span
-                    className={`text-sm font-bold tracking-tight ${
-                      t.type === 'income' ? 'text-income' : 'text-textPrimary'
-                    }`}
-                  >
-                    {t.type === 'income' ? '+' : '-'} ₹{t.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-
-                  <div className="flex items-center gap-1 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <button
-                      onClick={() => onEdit(t)}
-                      title="Edit"
-                      className="p-1.5 rounded-lg text-textSecondary hover:text-accent hover:bg-accent/10 transition-all"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setDeleteConfirmId(t.id)}
-                      title="Delete"
-                      className="p-1.5 rounded-lg text-textSecondary hover:text-expense hover:bg-expense/10 transition-all"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-card border border-border w-full max-w-sm rounded-2xl shadow-xl p-6 space-y-4">
-            <div className="flex items-center gap-3 text-expense">
-              <div className="bg-expense/10 p-2.5 rounded-full">
-                <AlertCircle className="w-6 h-6" />
+        <div className="fixed inset-0 bg-overlay backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-surface border border-border w-full max-w-sm rounded-xl shadow-popover p-4 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <div className="bg-error-bg text-error p-2 rounded-lg border border-error/20">
+                <AlertCircle className="w-4 h-4" />
               </div>
-              <h4 className="text-base font-bold text-textPrimary">Delete Transaction</h4>
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold text-textPrimary">Delete Transaction?</h4>
+                <p className="text-[10px] text-textSecondary">This record will be permanently removed.</p>
+              </div>
             </div>
-            
-            <p className="text-sm text-textSecondary leading-relaxed">
-              Are you sure you want to delete this transaction? This action cannot be undone.
-            </p>
 
-            <div className="flex gap-3 justify-end pt-2">
+            <div className="flex gap-2 justify-end pt-1">
               <button
+                type="button"
                 onClick={() => setDeleteConfirmId(null)}
-                className="bg-surface hover:bg-border/40 text-textSecondary border border-border px-4 py-2 rounded-xl text-xs font-semibold transition-all"
+                className="bg-surface-sunken hover:bg-surface text-textSecondary hover:text-textPrimary border border-border px-3 py-1 rounded-md text-xs font-semibold transition-all"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleDeleteConfirm}
-                className="bg-expense hover:bg-expense/90 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm transition-all"
+                className="bg-error hover:bg-error/90 text-white px-3 py-1 rounded-md text-xs font-bold shadow-sm transition-all"
               >
                 Delete
               </button>

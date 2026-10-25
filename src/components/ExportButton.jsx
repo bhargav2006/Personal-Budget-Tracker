@@ -1,26 +1,28 @@
-import React from 'react';
-import { Download } from 'lucide-react';
+import React, { useState } from 'react';
+import { Download, Check } from 'lucide-react';
 import { exportTransactions } from '../api';
 import toast from 'react-hot-toast';
 
 export default function ExportButton({ selectedMonth }) {
+  const [isExporting, setIsExporting] = useState(false);
+
   const handleExport = async () => {
+    setIsExporting(true);
     try {
       const csvContent = await exportTransactions(selectedMonth);
       
-      // Check if CSV only has header (no transactions)
       const rows = csvContent.split('\n');
       if (rows.length <= 1) {
         toast.error('No transactions available to export for this month.');
+        setIsExporting(false);
         return;
       }
 
-      // Create blob and trigger download
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', `transactions_${selectedMonth || 'all'}.csv`);
+      link.setAttribute('download', `budget_transactions_${selectedMonth || 'all'}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -30,16 +32,24 @@ export default function ExportButton({ selectedMonth }) {
     } catch (error) {
       console.error('Failed to export CSV:', error);
       toast.error('Export failed. Please try again.');
+    } finally {
+      setTimeout(() => setIsExporting(false), 600);
     }
   };
 
   return (
     <button
       onClick={handleExport}
-      className="flex items-center justify-center gap-1.5 sm:gap-2 bg-surface hover:bg-border/40 text-textPrimary border border-border px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm hover:border-textSecondary/30 transition-all duration-200 shrink-0"
+      disabled={isExporting}
+      className="flex items-center justify-center gap-1.5 bg-surface hover:bg-surface-sunken text-textPrimary hover:text-primary border border-border px-2.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all duration-150 shrink-0 active:scale-95 disabled:opacity-50"
       title="Export month data to CSV"
+      aria-label="Export month data to CSV"
     >
-      <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-textSecondary shrink-0" />
+      {isExporting ? (
+        <Check className="w-3.5 h-3.5 text-success shrink-0" />
+      ) : (
+        <Download className="w-3.5 h-3.5 text-textSecondary group-hover:text-primary shrink-0 transition-colors" />
+      )}
       <span>Export CSV</span>
     </button>
   );

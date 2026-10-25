@@ -2,52 +2,178 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --surface: #f8fafc;
-  --card: #ffffff;
-  --border: #e2e8f0;
-  
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  
-  --accent: #ef2b2d;
-  --income: #22c55e;
-  --expense: #ef4444;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --accent-grey: #64748b;
+/* -------------------------------------------------------------
+ * VERDANT SIGNAL v1.2.0 - REFINED DESKTOP WORKSPACE PALETTE
+ * Softer silver-slate typography, ultra-subtle borders, deep obsidian surfaces.
+ * Zero eye-strain, non-glare, single-screen ergonomics.
+ * ------------------------------------------------------------- */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces */
+  --bg: #F6F8F5;
+  --bg-rgb: 246, 248, 245;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #F0F4F2;
+  --sidebar: #EDF3F0;
+
+  /* Typography Colors */
+  --text: #193238;
+  --text-muted: #53666A;
+  --text-subtle: #758A8E;
+
+  /* Borders */
+  --border: #D8E2DE;
+  --control-border: #A2B6AF;
+
+  /* Brand / Action Colors */
+  --primary: #0F766E;
+  --primary-hover: #115E59;
+  --on-primary: #FFFFFF;
+  --primary-container: #E2F3F0;
+  --on-primary-container: #124F4A;
+
+  --secondary: #315E67;
+  --secondary-hover: #254B53;
+  --on-secondary: #FFFFFF;
+  --secondary-container: #E5ECEC;
+  --on-secondary-container: #203D43;
+
+  --tertiary: #8B5A00;
+  --tertiary-hover: #744A00;
+  --on-tertiary: #FFFFFF;
+  --tertiary-container: #F8E8C6;
+  --on-tertiary-container: #5D3F0A;
+
+  /* Accent Categories */
+  --accent-lilac: #6B62BE;
+  --accent-coral: #C2543A;
+
+  /* Functional Status Colors */
+  --success: #1E824C;
+  --success-bg: #E8F5EE;
+  --warning: #8B5A00;
+  --warning-bg: #FFF3D6;
+  --error: #BA2D3A;
+  --error-bg: #FDE8EA;
+  --info: #225CB8;
+  --info-bg: #EAF2FF;
+  --focus: #0F766E;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(25, 50, 56, 0.04);
+  --shadow-popover: 0 8px 24px rgba(25, 50, 56, 0.1);
+  --shadow-primary: 0 2px 8px rgba(15, 118, 110, 0.18);
+
+  /* App Aliases */
+  --background: var(--bg);
+  --card: var(--surface);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --accent: var(--primary);
+  --accent-hover: var(--primary-hover);
+  --income: var(--success);
+  --income-bg: var(--success-bg);
+  --expense: var(--error);
+  --expense-bg: var(--error-bg);
+  --accent-grey: var(--text-subtle);
 }
 
-.dark {
-  --background: #0a0a0a;
-  --surface: #111827;
-  --card: #1f2937;
-  --border: #374151;
-  
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  
-  --accent: #ef2b2d;
-  --income: #22c55e;
-  --expense: #ef4444;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --accent-grey: #64748b;
+.dark,
+[data-theme="dark"] {
+  /* Surfaces - Deep obsidian navy canvas with gentle slate surfaces */
+  --bg: #070D13;
+  --bg-rgb: 7, 13, 19;
+  --surface: #0E1620;
+  --surface-raised: #131E2A;
+  --surface-sunken: #091018;
+  --sidebar: #0B121A;
+
+  /* Typography Colors - Softer silver-slate (#CBD5E1 / #94A3B8); never harsh white */
+  --text: #CBD5E1;
+  --text-muted: #7E90A0;
+  --text-subtle: #4D5E6E;
+
+  /* Borders - Dark, subtle boundary lines; zero eye strain */
+  --border: #16222E;
+  --control-border: #223242;
+
+  /* Brand / Action Colors - Muted oceanic teal */
+  --primary: #149A8C;
+  --primary-hover: #19AF9F;
+  --on-primary: #FFFFFF;
+  --primary-container: #0F2525;
+  --on-primary-container: #5ECDBF;
+
+  --secondary: #4A8894;
+  --secondary-hover: #5D9AA6;
+  --on-secondary: #0A141A;
+  --secondary-container: #112028;
+  --on-secondary-container: #95C7CF;
+
+  --tertiary: #CFA055;
+  --tertiary-hover: #DCB16A;
+  --on-tertiary: #161108;
+  --tertiary-container: #261E12;
+  --on-tertiary-container: #DFBC82;
+
+  /* Accent Categories */
+  --accent-lilac: #8E87D4;
+  --accent-coral: #D97560;
+
+  /* Status Colors */
+  --success: #2EA068;
+  --success-bg: rgba(46, 160, 104, 0.12);
+  --warning: #D9A03C;
+  --warning-bg: rgba(217, 160, 60, 0.12);
+  --error: #CF535C;
+  --error-bg: rgba(207, 83, 92, 0.12);
+  --info: #4578C9;
+  --info-bg: rgba(69, 120, 201, 0.12);
+  --focus: #149A8C;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-popover: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --shadow-primary: 0 2px 10px rgba(20, 154, 140, 0.22);
+
+  /* App Aliases */
+  --background: var(--bg);
+  --card: var(--surface);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --accent: var(--primary);
+  --accent-hover: var(--primary-hover);
+  --income: var(--success);
+  --income-bg: var(--success-bg);
+  --expense: var(--error);
+  --expense-bg: var(--error-bg);
+  --accent-grey: var(--text-subtle);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  transition: background-color 150ms ease, color 150ms ease;
+  overflow-x: hidden;
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
@@ -55,10 +181,21 @@
   }
 }
 
-/* Custom scrollbar for transaction lists and dashboards */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom compact scrollbar for internal ledger and lists */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -68,5 +205,13 @@
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--control-border);
+}
+
+/* Clean focus visible */
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 1.5px solid var(--focus);
+  outline-offset: 1px;
 }

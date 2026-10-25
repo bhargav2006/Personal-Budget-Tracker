@@ -2,11 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/azentrix-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/Bhargav_KB_Logo_circular.png" />
     <!-- Primary SEO -->
     <title>
-      Personal Budget Tracker | Income & Expense Management Dashboard
+      Personal Budget Tracker | Income &amp; Expense Management Dashboard
     </title>
 
     <meta
@@ -21,7 +22,7 @@
 
     <meta name="author" content="Bhargav Katakam" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#ef2b2d" />
+    <meta name="theme-color" content="#F6F8F5" />
 
     <!-- Open Graph -->
     <meta
@@ -38,7 +39,7 @@
 
     <meta property="og:site_name" content="Personal Budget Tracker" />
 
-    <meta property="og:image" content="/azentrix-logo.png" />
+    <meta property="og:image" content="/Bhargav_KB_Logo.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -50,7 +51,7 @@
       content="Manage income and expenses, monitor monthly budgets, and visualize spending through interactive charts."
     />
 
-    <meta name="twitter:image" content="/azentrix-logo.png" />
+    <meta name="twitter:image" content="/Bhargav_KB_Logo.png" />
 
     <!-- Application Metadata -->
     <meta name="application-name" content="Personal Budget Tracker" />
@@ -65,21 +66,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <script>
       (function () {
-        const theme =
-          localStorage.getItem("theme") ||
-          (window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light");
+        const STORAGE_KEY = "theme";
+        const stored = localStorage.getItem(STORAGE_KEY);
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored === "light" || stored === "dark" ? stored : (systemDark ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
         if (theme === "dark") {
           document.documentElement.classList.add("dark");
         } else {
           document.documentElement.classList.remove("dark");
         }
+        document.documentElement.style.colorScheme = theme;
       })();
     </script>
   </head>

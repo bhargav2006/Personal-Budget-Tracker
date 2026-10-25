@@ -2,29 +2,33 @@ import React from 'react';
 import { Sun, Moon } from 'lucide-react';
 
 export default function ThemeToggle({ theme, toggleTheme }) {
+  const isDark = theme === 'dark';
+
   return (
     <button
       onClick={toggleTheme}
-      className="flex items-center justify-center p-2 sm:p-2.5 bg-surface hover:bg-border/30 text-textPrimary border border-border rounded-xl shadow-sm hover:border-textSecondary/30 active:scale-95 transition-all duration-300 group shrink-0"
-      title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-      aria-label="Toggle Theme"
+      className="theme-btn relative flex items-center justify-center w-8 h-8 rounded-lg bg-surface hover:bg-surface-sunken text-textSecondary hover:text-textPrimary border border-border transition-all duration-150 active:scale-95 shadow-sm group focus-visible:ring-1 focus-visible:ring-focus shrink-0"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-pressed={isDark}
+      data-current-theme={theme}
+      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
-      <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
+      <div className="relative w-4 h-4 flex items-center justify-center overflow-hidden">
         {/* Sun Icon */}
-        <Sun 
-          className={`w-5 h-5 text-accent absolute transition-all duration-500 transform ${
-            theme === 'dark' 
-              ? 'translate-y-0 rotate-0 opacity-100' 
-              : 'translate-y-8 -rotate-90 opacity-0'
-          } group-hover:scale-110`} 
+        <Sun
+          className={`w-3.5 h-3.5 text-tertiary absolute transition-all duration-200 transform ${
+            isDark
+              ? 'translate-y-0 rotate-0 opacity-100 scale-100'
+              : 'translate-y-4 -rotate-90 opacity-0 scale-50'
+          }`}
         />
         {/* Moon Icon */}
-        <Moon 
-          className={`w-5 h-5 text-textSecondary absolute transition-all duration-500 transform ${
-            theme === 'light' 
-              ? 'translate-y-0 rotate-0 opacity-100' 
-              : '-translate-y-8 rotate-90 opacity-0'
-          } group-hover:scale-110 group-hover:text-accent`} 
+        <Moon
+          className={`w-3.5 h-3.5 text-secondary absolute transition-all duration-200 transform ${
+            !isDark
+              ? 'translate-y-0 rotate-0 opacity-100 scale-100'
+              : '-translate-y-4 rotate-90 opacity-0 scale-50'
+          }`}
         />
       </div>
     </button>
