@@ -1,20 +1,18 @@
-// Verdant Signal v1.2 — theme helper for plain JS, React, and Vite.
-// Import initializeTheme() early in your entry file, then call toggleTheme()
-// from the theme button. The CSS expects <html data-theme="light|dark">.
+// Verdant & Obsidian Global Design System — Theme Controller
+// Integrated into Personal Budget Tracker from D:\DesignSystems\Global-Design-System
 
-const STORAGE_KEY = "theme";
+const STORAGE_KEY = "gds-theme";
 const THEME_COLORS = {
   light: "#F6F8F5",
-  dark: "#071118"
+  dark: "#0E1111"
 };
 
 let mediaQuery = null;
 let mediaChangeHandler = null;
-let isInitialized = false;
 
 export function readStoredTheme() {
   try {
-    const value = window.localStorage.getItem(STORAGE_KEY);
+    const value = window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem("theme");
     return value === "light" || value === "dark" ? value : null;
   } catch {
     return null;
@@ -37,7 +35,7 @@ export function updateMetaThemeColor(theme) {
     meta.name = "theme-color";
     document.head.appendChild(meta);
   }
-  meta.content = THEME_COLORS[theme] || THEME_COLORS.light;
+  meta.content = THEME_COLORS[theme] || THEME_COLORS.dark;
 }
 
 export function updateThemeButtons(theme) {
@@ -46,7 +44,6 @@ export function updateThemeButtons(theme) {
   document.querySelectorAll(".theme-btn").forEach((button) => {
     button.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
     button.setAttribute("aria-pressed", String(isDark));
-    // Do not replace button innerHTML; React or another UI framework may own it.
     button.dataset.currentTheme = theme;
   });
 }
@@ -56,6 +53,7 @@ export function applyTheme(theme) {
   if (typeof document === "undefined") return nextTheme;
 
   document.documentElement.dataset.theme = nextTheme;
+  document.documentElement.setAttribute("data-theme", nextTheme);
   document.documentElement.classList.toggle("dark", nextTheme === "dark");
   document.documentElement.style.colorScheme = nextTheme;
   updateMetaThemeColor(nextTheme);
@@ -63,6 +61,7 @@ export function applyTheme(theme) {
 
   if (typeof window !== "undefined" && typeof window.CustomEvent === "function") {
     window.dispatchEvent(new CustomEvent("themechange", { detail: { theme: nextTheme } }));
+    window.dispatchEvent(new CustomEvent("gds-theme-change", { detail: { theme: nextTheme } }));
   }
   return nextTheme;
 }
@@ -73,8 +72,9 @@ export function setTheme(theme, { persist = true } = {}) {
   if (persist && typeof window !== "undefined") {
     try {
       window.localStorage.setItem(STORAGE_KEY, nextTheme);
+      window.localStorage.setItem("theme", nextTheme);
     } catch {
-      // Theme changes still work for the current page if storage is unavailable.
+      // Storage may be restricted
     }
   }
   return nextTheme;
@@ -85,7 +85,7 @@ export function setTheme(theme, { persist = true } = {}) {
  * use the system preference without writing an automatic default to storage.
  */
 export function initializeTheme() {
-  if (typeof document === "undefined" || typeof window === "undefined") return "light";
+  if (typeof document === "undefined" || typeof window === "undefined") return "dark";
 
   const initialTheme = readStoredTheme() ?? getSystemTheme();
   applyTheme(initialTheme);
@@ -107,18 +107,12 @@ export function initializeTheme() {
     mediaChangeHandler = null;
   }
 
-  isInitialized = true;
   return initialTheme;
 }
 
 /** Toggle and persist the visitor's chosen theme. */
 export function toggleTheme() {
-  if (typeof document === "undefined") return "light";
-  const current = document.documentElement.dataset.theme || (isInitialized ? "light" : initializeTheme());
+  if (typeof document === "undefined") return "dark";
+  const current = document.documentElement.dataset.theme || "dark";
   return setTheme(current === "dark" ? "light" : "dark", { persist: true });
-}
-
-// Optional global API for non-module scripts. ES module imports are preferred.
-if (typeof window !== "undefined") {
-  window.VerdantTheme = { setTheme, initializeTheme, toggleTheme };
 }

@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { ResponsiveContainer, BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 import { ArrowUpRight, ArrowDownRight, RefreshCw, BarChart2, PieChart as PieIcon } from 'lucide-react';
 
-// Refined, calm category palette (muted, non-glare colors)
+// Global Design System category & visualization palette (Alpine Forest, Slate Sage, Antique Gold, Soft Lilac, Coral, Emerald, Classic Blue)
 const PALETTE_COLORS = [
-  '#149A8C', // Primary Ocean Teal
-  '#4A8894', // Slate Teal
-  '#CFA055', // Soft Saffron Amber
-  '#8E87D4', // Soft Lilac
-  '#D97560', // Muted Coral
-  '#2EA068', // Muted Sage
-  '#4578C9', // Soft Blue
-  '#B8764B', // Ochre
+  '#42946A', // Global Forest Green Primary
+  '#709686', // Global Slate Spruce Secondary
+  '#CFA363', // Global Warm Champagne / Antique Gold
+  '#9F9BD4', // Global Accent Lilac
+  '#E28B75', // Global Accent Coral
+  '#5EAA7C', // Global Emerald Sage
+  '#7AA2D6', // Global Info Blue
+  '#B48648', // Warm Ochre
 ];
 
 const CustomTooltip = ({ active, payload }) => {

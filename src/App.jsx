@@ -9,6 +9,7 @@ import TransactionList from './components/TransactionList';
 import { MetricCards, SpendingAnalytics } from './components/Dashboard';
 import ExportButton from './components/ExportButton';
 import ThemeToggle from './components/ThemeToggle';
+import AmbientRibbonBackground from './components/AmbientRibbonBackground';
 import { Sparkles, BarChart2, Plus, X, LayoutGrid, ListFilter } from 'lucide-react';
 
 export default function App() {
@@ -176,7 +177,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col text-textPrimary antialiased selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen bg-background flex flex-col text-textPrimary antialiased selection:bg-primary/20 selection:text-primary relative overflow-x-hidden">
+      {/* 3D Flowing Ribbon Ambient Canvas Background */}
+      <AmbientRibbonBackground />
+
       {/* Toast Notifications */}
       <Toaster 
         position="top-right" 
@@ -249,7 +253,7 @@ export default function App() {
       </header>
 
       {/* Main Single-Screen Workspace Container */}
-      <main className="flex-grow max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-3 flex flex-col justify-between">
+      <main className="flex-grow max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-3 flex flex-col justify-between relative z-10">
         
         {/* 2. One-Row Financial Summary (4 Equal Cards) */}
         <MetricCards summary={summary} />
